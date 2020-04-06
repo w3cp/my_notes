@@ -25,13 +25,13 @@ class _NoteDetailsState extends State<NoteDetails> {
             },
             tooltip: 'Delete Note',
           ),
-          IconButton(
+          /*IconButton(
             icon: Icon(Icons.edit),
             onPressed: () {
               Navigator.pop(context, 'edit');
             },
             tooltip: 'Edit Note',
-          ),
+          ),*/
         ],
       ),
       body: Container(
@@ -51,6 +51,13 @@ class _NoteDetailsState extends State<NoteDetails> {
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pop(context, 'edit');
+        },
+        child: Icon(Icons.edit, size: 30.0),
+        tooltip: 'Edit Note',
       ),
     );
   }
