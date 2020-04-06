@@ -65,17 +65,20 @@ class AddNotesState extends State<AddNotes> {
       controller: _bodyController,
     );
 
+    void saveNote() {
+      if (_formKey.currentState.validate()) {
+        note.id = args.id;
+        note.title = _titleController.text;
+        note.body = _bodyController.text;
+        Navigator.pop(context, note);
+      }
+    }
+
     final saveButton = Padding(
       padding: const EdgeInsets.symmetric(vertical: 16.0),
       child: RaisedButton(
         onPressed: () {
-          if (_formKey.currentState.validate()) {
-            note.id = args.id;
-            note.title = _titleController.text;
-            note.body = _bodyController.text;
-            Navigator.pop(context, note);
-            //_showSnackBar('Processing data');
-          }
+          saveNote();
         },
         child: Text((args.title == '') ? 'Save' : 'Update'),
       ),
@@ -102,6 +105,13 @@ class AddNotesState extends State<AddNotes> {
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text((args.title == '') ? 'Add New Note' : 'Edit Note'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.done),
+            onPressed: saveNote,
+            tooltip: 'Save note',
+          )
+        ],
       ),
       body: ListView(
         children: <Widget>[

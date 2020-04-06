@@ -88,12 +88,19 @@ class NotesState extends State<Notes> {
     ));
   }
 
-  _viewNotes(BuildContext context, Note note) {
-    Navigator.pushNamed(
+  _viewNotes(BuildContext context, Note note) async {
+    final action = await Navigator.pushNamed(
       context,
       '/note_details',
       arguments: note,
     );
+    if (action != null) {
+      if (action == 'delete') {
+          _deleteNote(context, note);
+      } else if (action == 'edit') {
+        _updateNote(context, note);
+      }
+    }
   }
 
   String _getSubtitle(String str, int endIndex) {

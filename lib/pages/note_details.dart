@@ -8,25 +8,43 @@ class NoteDetails extends StatefulWidget {
 }
 
 class _NoteDetailsState extends State<NoteDetails> {
+  Note _note = Note();
+
   @override
   Widget build(BuildContext context) {
-    final Note _noteArgs = ModalRoute.of(context).settings.arguments;
+    _note = ModalRoute.of(context).settings.arguments;
 
     return Scaffold(
       appBar: AppBar(
         title: Text('Note Details'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.delete),
+            onPressed: () {
+              Navigator.pop(context, 'delete');
+            },
+            tooltip: 'Delete Note',
+          ),
+          IconButton(
+            icon: Icon(Icons.edit),
+            onPressed: () {
+              Navigator.pop(context, 'edit');
+            },
+            tooltip: 'Edit Note',
+          ),
+        ],
       ),
       body: Container(
         child: ListView(
           padding: const EdgeInsets.all(16.0),
           children: <Widget>[
             Text(
-              _noteArgs.title,
+              _note.title,
               style: Theme.of(context).textTheme.headline,
             ),
             SizedBox(height: 24.0),
             Text(
-              _noteArgs.body,
+              _note.body,
               style: TextStyle(
                 fontSize: 16.0,
               ),
