@@ -77,7 +77,7 @@ class NotesState extends State<Notes> {
 
     Scaffold.of(context).removeCurrentSnackBar();
     Scaffold.of(context).showSnackBar(SnackBar(
-      content: Text('Delete'),
+      content: Text('Note deleted'),
       action: SnackBarAction(
         label: 'Undo',
         onPressed: () {
@@ -90,10 +90,43 @@ class NotesState extends State<Notes> {
 
   String getSubtitle(String str, int endIndex) {
     if (str.length <= endIndex) {
-      endIndex = str.length;
-      return str.substring(0, endIndex);
+      return str;
     }
     return str.substring(0, endIndex) + '...';
+  }
+
+  Widget _buildList() {
+    return ListView.builder(
+      itemCount: _length * 2,
+      itemBuilder: (context, index) {
+        final i = _length - (index ~/ 2) - 1; // last to first
+        final note = notes[i];
+        return (index % 2 == 1)
+            ? Divider(height: 0.0)
+            : Dismissible(
+                key: Key(note.id.toString()),
+                onDismissed: (direction) {
+                  _deleteNote(context, note);
+                },
+                background: Container(
+                  color: Colors.red,
+                  child: ListTile(
+                    leading: Icon(Icons.delete),
+                    trailing: Icon(Icons.delete),
+                  ),
+                ),
+                child: ListTile(
+                  contentPadding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+                  title: Text('${note.title}'),
+                  subtitle: Text(getSubtitle(note.body, 36)),
+                  trailing: Icon(Icons.edit),
+                  onTap: () {
+                    _updateNote(context, note);
+                  },
+                ),
+              );
+      },
+    );
   }
 
   @override
@@ -108,37 +141,13 @@ class NotesState extends State<Notes> {
       appBar: AppBar(
         title: Text('My Notes'),
       ),
-      body: ListView.builder(
-        itemCount: notes.length * 2,
-        itemBuilder: (context, index) {
-          final i = _length - (index ~/ 2) - 1; // last to first
-          final note = notes[i];
-          return Dismissible(
-            key: Key(note.body + note.title),
-            onDismissed: (direction) {
-              _deleteNote(context, note);
-            },
-            background: Container(color: Colors.red),
-            child: (index % 2 == 1)
-                ? Divider(
-                    indent: 16.0,
-                    endIndent: 16.0,
-                    thickness: 1.0,
-                  )
-                : ListTile(
-                    title: Text('${note.title}'),
-                    subtitle: Text(getSubtitle(note.body, 36)),
-                    trailing: Icon(Icons.edit),
-                    onTap: () {
-                      _updateNote(context, note);
-                    },
-                  ),
-          );
-        },
+      body: Container(
+        //padding: const EdgeInsets.symmetric(vertical: 16.0),
+        child: _buildList(),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          print(_length);
+          //print(_length);
           _createNote(context);
         },
         child: Icon(Icons.add, size: 30.0),
