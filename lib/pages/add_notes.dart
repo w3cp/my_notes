@@ -11,30 +11,30 @@ class AddNotesState extends State<AddNotes> {
   final note = Note();
 
   final _formKey = GlobalKey<FormState>();
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   /*void _showSnackBar(String text) {
-    scaffoldKey.currentState.showSnackBar(SnackBar(
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
       content: Text(text),
     ));
   }*/
 
-  final titleController = TextEditingController();
-  final bodyController = TextEditingController();
+  final _titleController = TextEditingController();
+  final _bodyController = TextEditingController();
 
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
-    titleController.dispose();
-    bodyController.dispose();
+    _titleController.dispose();
+    _bodyController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final Note args = ModalRoute.of(context).settings.arguments;
-    titleController.text = args.title;
-    bodyController.text = args.body;
+    _titleController.text = args.title;
+    _bodyController.text = args.body;
 
     final titleFormField = TextFormField(
       validator: (value) {
@@ -46,7 +46,7 @@ class AddNotesState extends State<AddNotes> {
       decoration: InputDecoration(
         labelText: 'Note title',
       ),
-      controller: titleController,
+      controller: _titleController,
       autofocus: true,
     );
 
@@ -62,7 +62,7 @@ class AddNotesState extends State<AddNotes> {
       ),
       keyboardType: TextInputType.multiline,
       maxLines: null,
-      controller: bodyController,
+      controller: _bodyController,
     );
 
     final saveButton = Padding(
@@ -71,8 +71,8 @@ class AddNotesState extends State<AddNotes> {
         onPressed: () {
           if (_formKey.currentState.validate()) {
             note.id = args.id;
-            note.title = titleController.text;
-            note.body = bodyController.text;
+            note.title = _titleController.text;
+            note.body = _bodyController.text;
             Navigator.pop(context, note);
             //_showSnackBar('Processing data');
           }
@@ -99,7 +99,7 @@ class AddNotesState extends State<AddNotes> {
     );
 
     return Scaffold(
-      key: scaffoldKey,
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text((args.title == '') ? 'Add New Note' : 'Edit Note'),
       ),

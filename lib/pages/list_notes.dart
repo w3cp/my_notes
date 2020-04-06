@@ -88,6 +88,14 @@ class NotesState extends State<Notes> {
     ));
   }
 
+  _viewNotes(BuildContext context, Note note) {
+    Navigator.pushNamed(
+      context,
+      '/note_details',
+      arguments: note,
+    );
+  }
+
   String _getSubtitle(String str, int endIndex) {
     if (str.length <= endIndex) {
       return str;
@@ -126,7 +134,9 @@ class NotesState extends State<Notes> {
                       _updateNote(context, note);
                     },
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    _viewNotes(context, note);
+                  },
                 ),
               );
       },
@@ -146,7 +156,6 @@ class NotesState extends State<Notes> {
         title: Text('My Notes'),
       ),
       body: Container(
-        //padding: const EdgeInsets.symmetric(vertical: 16.0),
         child: _buildList(),
       ),
       floatingActionButton: FloatingActionButton(
