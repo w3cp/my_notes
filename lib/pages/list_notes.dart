@@ -14,23 +14,23 @@ class NotesState extends State<Notes> {
   List<Note> notes;
   int _length = 0;
 
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   void _showSnackBar(String text) {
-    scaffoldKey.currentState.removeCurrentSnackBar();
-    scaffoldKey.currentState.showSnackBar(SnackBar(
+    _scaffoldKey.currentState.removeCurrentSnackBar();
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
       content: Text(text),
     ));
   }
 
-  void updateNoteList() {
+  void _updateNoteList() {
     final Future<Database> dbFuture = _db.database;
     dbFuture.then((database) {
       Future<List<Note>> notesFuture = _db.notes();
-      notesFuture.then((note) {
+      notesFuture.then((notes) {
         setState(() {
-          this.notes = note;
-          this._length = note.length;
+          this.notes = notes;
+          this._length = notes.length;
         });
       });
     });
@@ -49,7 +49,7 @@ class NotesState extends State<Notes> {
       );
       if (editedNote != null) {
         _db.createNote(editedNote);
-        updateNoteList();
+        _updateNoteList();
         _showSnackBar('Note created successfully');
       }
     } catch (e) {
@@ -65,14 +65,14 @@ class NotesState extends State<Notes> {
     );
     if (editedNote != null) {
       _db.updateNote(editedNote);
-      updateNoteList();
+      _updateNoteList();
       _showSnackBar('Note updated successfully');
     }
   }
 
   _deleteNote(BuildContext context, Note note) {
     _db.deleteNote(note.id);
-    updateNoteList();
+    _updateNoteList();
     //_showSnackBar('Note deleted');
 
     Scaffold.of(context).removeCurrentSnackBar();
@@ -82,13 +82,13 @@ class NotesState extends State<Notes> {
         label: 'Undo',
         onPressed: () {
           _db.createNote(note);
-          updateNoteList();
+          _updateNoteList();
         },
       ),
     ));
   }
 
-  String getSubtitle(String str, int endIndex) {
+  String _getSubtitle(String str, int endIndex) {
     if (str.length <= endIndex) {
       return str;
     }
@@ -116,13 +116,17 @@ class NotesState extends State<Notes> {
                   ),
                 ),
                 child: ListTile(
-                  contentPadding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+                  contentPadding:
+                      const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
                   title: Text('${note.title}'),
-                  subtitle: Text(getSubtitle(note.body, 36)),
-                  trailing: Icon(Icons.edit),
-                  onTap: () {
-                    _updateNote(context, note);
-                  },
+                  subtitle: Text(_getSubtitle(note.body, 36)),
+                  trailing: IconButton(
+                    icon: Icon(Icons.edit),
+                    onPressed: () {
+                      _updateNote(context, note);
+                    },
+                  ),
+                  onTap: () {},
                 ),
               );
       },
@@ -133,11 +137,11 @@ class NotesState extends State<Notes> {
   Widget build(BuildContext context) {
     if (notes == null) {
       notes = List<Note>();
-      updateNoteList();
+      _updateNoteList();
     }
 
     return Scaffold(
-      key: scaffoldKey,
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text('My Notes'),
       ),
