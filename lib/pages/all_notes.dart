@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'package:my_notes/utils/uidata.dart';
-
 import 'package:my_notes/model/note.dart';
 import 'package:my_notes/db/db.dart';
 

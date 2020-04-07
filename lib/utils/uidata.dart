@@ -50,7 +50,9 @@ class UIData {
   static const String formErrorEmtyDescription =
       "Please enter note description";
   static const String formLebelTitle = "Note title";
+  static const String formHintTitle = "Write your note title";
   static const String formLebelBody = "Note body";
+  static const String formHintBody = "Write your note here";
 
   //raised button
   static const String raisedButtonSave = "Save";

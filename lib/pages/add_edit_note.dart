@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:my_notes/utils/uidata.dart';
-
 import 'package:my_notes/model/note.dart';
 
 class AddEditNote extends StatefulWidget {
@@ -47,8 +46,10 @@ class AddEditNoteState extends State<AddEditNote> {
       },
       decoration: InputDecoration(
         labelText: UIData.formLebelTitle,
+        hintText: UIData.formHintTitle,
       ),
       controller: _titleController,
+      maxLines: 1,
       autofocus: true,
     );
 
@@ -61,6 +62,7 @@ class AddEditNoteState extends State<AddEditNote> {
       },
       decoration: InputDecoration(
         labelText: UIData.formLebelBody,
+        hintText: UIData.formHintBody,
       ),
       keyboardType: TextInputType.multiline,
       maxLines: null,
@@ -76,53 +78,69 @@ class AddEditNoteState extends State<AddEditNote> {
       }
     }
 
-    final saveButton = Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16.0),
-      child: RaisedButton(
-        onPressed: () {
-          saveNote();
-        },
-        child: Text((args.title == '')
-            ? UIData.raisedButtonSave
-            : UIData.raisedButtonUpdate),
-      ),
+    final saveButton = RaisedButton(
+      padding: EdgeInsets.all(12.0),
+      shape: StadiumBorder(),
+      child: Text((args.title == '')
+          ? UIData.raisedButtonSave
+          : UIData.raisedButtonUpdate),
+      color: Colors.teal,
+      onPressed: () {
+        saveNote();
+      },
     );
 
     final form = Form(
       key: _formKey,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
+      child: Container(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            titleFormField,
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10.0),
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 30.0),
+              child: titleFormField,
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 30.0),
               child: bodyFormField,
             ),
-            saveButton,
+            SizedBox(
+              height: 30.0,
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 30.0),
+              width: double.infinity,
+              child: saveButton,
+            ),
+            SizedBox(
+              height: 5.0,
+            ),
           ],
         ),
       ),
     );
 
+    final appBar = AppBar(
+      title: Text((args.title == '')
+          ? UIData.titleRouteAddNewNote
+          : UIData.titleRouteEditNote),
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.done),
+          onPressed: saveNote,
+          tooltip: UIData.tooltipSaveNote,
+        )
+      ],
+    );
+
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(
-        title: Text((args.title == '')
-            ? UIData.titleRouteAddNewNote
-            : UIData.titleRouteEditNote),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.done),
-            onPressed: saveNote,
-            tooltip: UIData.tooltipSaveNote,
-          )
-        ],
-      ),
-      body: ListView(
-        children: <Widget>[
-          form,
-        ],
+      appBar: appBar,
+      body: Center(
+        child: SingleChildScrollView(
+          child: form,
+        ),
       ),
     );
   }

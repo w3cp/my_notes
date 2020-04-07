@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:my_notes/utils/uidata.dart';
-
 import 'package:my_notes/pages/all_notes.dart';
 import 'package:my_notes/pages/note_details.dart';
 import 'package:my_notes/pages/add_edit_note.dart';

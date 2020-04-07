@@ -4,7 +4,6 @@ import 'package:path/path.dart' as p;
 import 'dart:io';
 
 import 'package:my_notes/utils/dbdata.dart';
-
 import 'package:my_notes/model/note.dart';
 
 class DBProvider {
