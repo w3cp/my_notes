@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
+import 'package:my_notes/utils/uidata.dart';
+
 import 'package:my_notes/model/note.dart';
 
-class AddNotes extends StatefulWidget {
+class AddEditNote extends StatefulWidget {
   @override
-  AddNotesState createState() => AddNotesState();
+  AddEditNoteState createState() => AddEditNoteState();
 }
 
-class AddNotesState extends State<AddNotes> {
+class AddEditNoteState extends State<AddEditNote> {
   final note = Note();
 
   final _formKey = GlobalKey<FormState>();
@@ -39,12 +41,12 @@ class AddNotesState extends State<AddNotes> {
     final titleFormField = TextFormField(
       validator: (value) {
         if (value.isEmpty) {
-          return 'Please enter note title';
+          return UIData.formErrorEmtyTitle;
         }
         return null;
       },
       decoration: InputDecoration(
-        labelText: 'Note title',
+        labelText: UIData.formLebelTitle,
       ),
       controller: _titleController,
       autofocus: true,
@@ -53,12 +55,12 @@ class AddNotesState extends State<AddNotes> {
     final bodyFormField = TextFormField(
       validator: (value) {
         if (value.isEmpty) {
-          return 'Please enter note description';
+          return UIData.formErrorEmtyDescription;
         }
         return null;
       },
       decoration: InputDecoration(
-        labelText: 'Note body',
+        labelText: UIData.formLebelBody,
       ),
       keyboardType: TextInputType.multiline,
       maxLines: null,
@@ -80,7 +82,9 @@ class AddNotesState extends State<AddNotes> {
         onPressed: () {
           saveNote();
         },
-        child: Text((args.title == '') ? 'Save' : 'Update'),
+        child: Text((args.title == '')
+            ? UIData.raisedButtonSave
+            : UIData.raisedButtonUpdate),
       ),
     );
 
@@ -104,12 +108,14 @@ class AddNotesState extends State<AddNotes> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text((args.title == '') ? 'Add New Note' : 'Edit Note'),
+        title: Text((args.title == '')
+            ? UIData.titleRouteAddNewNote
+            : UIData.titleRouteEditNote),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.done),
             onPressed: saveNote,
-            tooltip: 'Save note',
+            tooltip: UIData.tooltipSaveNote,
           )
         ],
       ),

@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
+import 'package:my_notes/utils/uidata.dart';
+
 import 'package:my_notes/model/note.dart';
 import 'package:my_notes/db/db.dart';
 
-class Notes extends StatefulWidget {
+class AllNotes extends StatefulWidget {
   @override
-  NotesState createState() => NotesState();
+  AllNotesState createState() => AllNotesState();
 }
 
-class NotesState extends State<Notes> {
+class AllNotesState extends State<AllNotes> {
   DBProvider _db = DBProvider.db;
   List<Note> notes;
   int _length = 0;
@@ -25,8 +27,10 @@ class NotesState extends State<Notes> {
 
   void _updateNoteList() {
     final Future<Database> dbFuture = _db.database;
+
     dbFuture.then((database) {
-      Future<List<Note>> notesFuture = _db.notes();
+      Future<List<Note>> notesFuture = _db.getAllNotes();
+
       notesFuture.then((notes) {
         setState(() {
           this.notes = notes;
@@ -40,8 +44,9 @@ class NotesState extends State<Notes> {
     try {
       final editedNote = await Navigator.pushNamed(
         context,
-        '/add_note',
+        UIData.routeAddEditNote,
         arguments: Note(
+          // to create a new note pass the latest note id + 1
           id: (_length == 0) ? 0 : notes[_length - 1].id + 1,
           title: '',
           body: '',
@@ -50,7 +55,7 @@ class NotesState extends State<Notes> {
       if (editedNote != null) {
         _db.createNote(editedNote);
         _updateNoteList();
-        _showSnackBar('Note created successfully');
+        _showSnackBar(UIData.snackbarNoteCreateSuccess);
       }
     } catch (e) {
       print('Failed to create note: $e');
@@ -60,26 +65,25 @@ class NotesState extends State<Notes> {
   _updateNote(BuildContext context, Note currentNote) async {
     final editedNote = await Navigator.pushNamed(
       context,
-      '/add_note',
+      UIData.routeAddEditNote,
       arguments: currentNote,
     );
     if (editedNote != null) {
       _db.updateNote(editedNote);
       _updateNoteList();
-      _showSnackBar('Note updated successfully');
+      _showSnackBar(UIData.snackbarNoteUpdateSuccess);
     }
   }
 
   _deleteNote(BuildContext context, Note note) {
     _db.deleteNote(note.id);
     _updateNoteList();
-    //_showSnackBar('Note deleted');
 
     Scaffold.of(context).removeCurrentSnackBar();
     Scaffold.of(context).showSnackBar(SnackBar(
-      content: Text('Note deleted'),
+      content: Text(UIData.snackbarNoteDeleteSuccess),
       action: SnackBarAction(
-        label: 'Undo',
+        label: UIData.lebelUndo,
         onPressed: () {
           _db.createNote(note);
           _updateNoteList();
@@ -88,16 +92,16 @@ class NotesState extends State<Notes> {
     ));
   }
 
-  _viewNotes(BuildContext context, Note note) async {
+  _viewNote(BuildContext context, Note note) async {
     final action = await Navigator.pushNamed(
       context,
-      '/note_details',
+      UIData.routeNoteDetails,
       arguments: note,
     );
     if (action != null) {
-      if (action == 'delete') {
-          _deleteNote(context, note);
-      } else if (action == 'edit') {
+      if (action == UIData.actionDelete) {
+        _deleteNote(context, note);
+      } else if (action == UIData.actionEdit) {
         _updateNote(context, note);
       }
     }
@@ -142,7 +146,7 @@ class NotesState extends State<Notes> {
                     },
                   ),
                   onTap: () {
-                    _viewNotes(context, note);
+                    _viewNote(context, note);
                   },
                 ),
               );
@@ -160,18 +164,17 @@ class NotesState extends State<Notes> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text('My Notes'),
+        title: Text(UIData.appName),
       ),
       body: Container(
         child: _buildList(),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          //print(_length);
           _createNote(context);
         },
         child: Icon(Icons.add, size: 30.0),
-        tooltip: 'Add New Note',
+        tooltip: UIData.tooltipAddNewNote,
       ),
     );
   }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:my_notes/utils/uidata.dart';
+
 import 'package:my_notes/model/note.dart';
 
 class NoteDetails extends StatefulWidget {
@@ -16,21 +18,21 @@ class _NoteDetailsState extends State<NoteDetails> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Note Details'),
+        title: Text(UIData.titleRouteNoteDetails),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.delete),
             onPressed: () {
-              Navigator.pop(context, 'delete');
+              Navigator.pop(context, UIData.actionDelete);
             },
-            tooltip: 'Delete Note',
+            tooltip: UIData.tooltipDeleteNote,
           ),
           /*IconButton(
             icon: Icon(Icons.edit),
             onPressed: () {
-              Navigator.pop(context, 'edit');
+              Navigator.pop(context, UIData.actionEdit);
             },
-            tooltip: 'Edit Note',
+            tooltip: UIData.tooltipEditNote,
           ),*/
         ],
       ),
@@ -54,10 +56,10 @@ class _NoteDetailsState extends State<NoteDetails> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pop(context, 'edit');
+          Navigator.pop(context, UIData.actionEdit);
         },
         child: Icon(Icons.edit, size: 30.0),
-        tooltip: 'Edit Note',
+        tooltip: UIData.tooltipEditNote,
       ),
     );
   }
