@@ -1,3 +1,5 @@
+import 'package:my_notes/utils/dbdata.dart';
+
 class Note {
   int id;
   String title;
@@ -10,18 +12,14 @@ class Note {
   });
 
   factory Note.fromMap(Map<String, dynamic> data) => new Note(
-        id: data["id"],
-        title: data["title"],
-        body: data["body"],
+        id: data[DBData.columnNoteId],
+        title: data[DBData.columnNoteTitle],
+        body: data[DBData.columnNoteBody],
       );
 
   Map<String, dynamic> toMap() => {
-        "id": id,
-        "title": title,
-        "body": body,
+        DBData.columnNoteId: id,
+        DBData.columnNoteTitle: title,
+        DBData.columnNoteBody: body,
       };
-  @override
-  String toString() {
-    return 'Note{id: $id, title: $title, body: $body}';
-  }
 }
