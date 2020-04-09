@@ -9,13 +9,13 @@ class Note {
     this.body,
   });
 
-  factory Note.fromJson(Map<String, dynamic> data) => new Note(
+  factory Note.fromMap(Map<String, dynamic> data) => new Note(
         id: data["id"],
         title: data["title"],
         body: data["body"],
       );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toMap() => {
         "id": id,
         "title": title,
         "body": body,

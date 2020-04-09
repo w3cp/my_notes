@@ -47,7 +47,7 @@ class DBProvider {
     final db = await database;
     var result = await db.insert(
       DBData.tableNote,
-      note.toJson(),
+      note.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
     return result;
@@ -101,7 +101,7 @@ class DBProvider {
     );
 
     if (results.length > 0) {
-      return new Note.fromJson(results.first);
+      return Note.fromMap(results.first);
     }
 
     return null;
@@ -111,7 +111,7 @@ class DBProvider {
     final db = await database;
     return await db.update(
       DBData.tableNote,
-      note.toJson(),
+      note.toMap(),
       where: "${DBData.columnNoteId} = ?",
       whereArgs: [note.id],
     );
