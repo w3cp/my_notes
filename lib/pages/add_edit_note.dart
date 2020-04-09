@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:my_notes/utils/uidata.dart';
 import 'package:my_notes/model/note.dart';
+import 'package:my_notes/db/db.dart';
 
 class AddEditNote extends StatefulWidget {
   @override
@@ -9,16 +10,10 @@ class AddEditNote extends StatefulWidget {
 }
 
 class AddEditNoteState extends State<AddEditNote> {
+  DBProvider _db = DBProvider.db;
   final note = Note();
 
   final _formKey = GlobalKey<FormState>();
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  /*void _showSnackBar(String text) {
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
-      content: Text(text),
-    ));
-  }*/
 
   final _titleController = TextEditingController();
   final _bodyController = TextEditingController();
@@ -74,7 +69,12 @@ class AddEditNoteState extends State<AddEditNote> {
         note.id = args.id;
         note.title = _titleController.text;
         note.body = _bodyController.text;
-        Navigator.pop(context, note);
+        _db.createNote(note);
+        Navigator.pop(
+            context,
+            (args.title == '')
+                ? UIData.snackbarNoteCreateSuccess
+                : UIData.snackbarNoteUpdateSuccess);
       }
     }
 
@@ -135,7 +135,6 @@ class AddEditNoteState extends State<AddEditNote> {
     );
 
     return Scaffold(
-      key: _scaffoldKey,
       appBar: appBar,
       body: Center(
         child: SingleChildScrollView(

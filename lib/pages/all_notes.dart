@@ -40,37 +40,31 @@ class AllNotesState extends State<AllNotes> {
   }
 
   _createNote(BuildContext context) async {
-    try {
-      final editedNote = await Navigator.pushNamed(
-        context,
-        UIData.routeAddEditNote,
-        arguments: Note(
-          // to create a new note pass the latest note id + 1
-          id: (_length == 0) ? 0 : notes[_length - 1].id + 1,
-          title: '',
-          body: '',
-        ),
-      );
-      if (editedNote != null) {
-        _db.createNote(editedNote);
-        _updateNoteList();
-        _showSnackBar(UIData.snackbarNoteCreateSuccess);
-      }
-    } catch (e) {
-      print('Failed to create note: $e');
+    final result = await Navigator.pushNamed(
+      context,
+      UIData.routeAddEditNote,
+      arguments: Note(
+        // to create a new note pass the latest note id + 1
+        id: (_length == 0) ? 0 : notes[_length - 1].id + 1,
+        title: '',
+        body: '',
+      ),
+    );
+    if (result != null) {
+      _updateNoteList();
+      _showSnackBar(result);
     }
   }
 
-  _updateNote(BuildContext context, Note currentNote) async {
-    final editedNote = await Navigator.pushNamed(
+  _editNote(BuildContext context, Note currentNote) async {
+    final result = await Navigator.pushNamed(
       context,
       UIData.routeAddEditNote,
       arguments: currentNote,
     );
-    if (editedNote != null) {
-      _db.updateNote(editedNote);
+    if (result != null) {
       _updateNoteList();
-      _showSnackBar(UIData.snackbarNoteUpdateSuccess);
+      _showSnackBar(result);
     }
   }
 
@@ -101,7 +95,7 @@ class AllNotesState extends State<AllNotes> {
       if (action == UIData.actionDelete) {
         _deleteNote(context, note);
       } else if (action == UIData.actionEdit) {
-        _updateNote(context, note);
+        _editNote(context, note);
       }
     }
   }
@@ -141,7 +135,7 @@ class AllNotesState extends State<AllNotes> {
                   trailing: IconButton(
                     icon: Icon(Icons.edit),
                     onPressed: () {
-                      _updateNote(context, note);
+                      _editNote(context, note);
                     },
                   ),
                   onTap: () {
