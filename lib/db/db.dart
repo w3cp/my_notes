@@ -1,6 +1,5 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' as p;
-//import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 
 import 'package:my_notes/utils/dbdata.dart';
@@ -32,6 +31,7 @@ class DBProvider {
 
   initDB() async {
     String path = await _dbPath;
+    
     return await openDatabase(
       path,
       version: 1,
@@ -45,17 +45,41 @@ class DBProvider {
 
   Future<int> createNote(Note note) async {
     final db = await database;
+
     var result = await db.insert(
       DBData.tableNote,
       note.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+
     return result;
   }
 
-  Future<List> getNotes() async {
+  Future<int> updateNote(Note note) async {
     final db = await database;
-    var result = await db.query(
+
+    return await db.update(
+      DBData.tableNote,
+      note.toMap(),
+      where: "${DBData.columnNoteId} = ?",
+      whereArgs: [note.id],
+    );
+  }
+
+  Future<int> deleteNote(int id) async {
+    final db = await database;
+
+    return await db.delete(
+      DBData.tableNote,
+      where: '${DBData.columnNoteId} = ?',
+      whereArgs: [id],
+    );
+  }
+
+  Future<List<Note>> getAllNotes() async {
+    final db = await database;
+
+    final List<Map<String, dynamic>> maps = await db.query(
       DBData.tableNote,
       columns: [
         DBData.columnNoteId,
@@ -64,17 +88,7 @@ class DBProvider {
       ],
     );
 
-    return result.toList();
-  }
-
-  Future<List<Note>> getAllNotes() async {
-    // Get a reference to the database
-    final db = await database;
-
-    // Query the table for all The Notes.
-    final List<Map<String, dynamic>> maps = await db.query(DBData.tableNote);
-
-    // Convert the List<Map<String, dynamic> into a List<Dog>.
+    // Convert the List<Map<String, dynamic> into a List<Note>.
     return List.generate(
       maps.length,
       (i) {
@@ -107,28 +121,7 @@ class DBProvider {
     return null;
   }
 
-  Future<int> updateNote(Note note) async {
-    final db = await database;
-    return await db.update(
-      DBData.tableNote,
-      note.toMap(),
-      where: "${DBData.columnNoteId} = ?",
-      whereArgs: [note.id],
-    );
-  }
-
-  Future<int> deleteNote(int id) async {
-    final db = await database;
-    return await db.delete(
-      DBData.tableNote,
-      where: '${DBData.columnNoteId} = ?',
-      whereArgs: [id],
-    );
-  }
-
   Future<String> get _localPath async {
-    //final directory = await getApplicationDocumentsDirectory();
-    //return directory.path;
     final directory = await getDatabasesPath();
     return directory;
   }
