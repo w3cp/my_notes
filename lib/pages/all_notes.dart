@@ -91,7 +91,9 @@ class AllNotesState extends State<AllNotes> {
       UIData.routeNoteDetails,
       arguments: note,
     );
-    if (action != null) {
+    if (action == null) {
+      _updateNoteList();
+    } else {
       if (action == UIData.actionDelete) {
         _deleteNote(context, note);
       } else if (action == UIData.actionEdit) {
