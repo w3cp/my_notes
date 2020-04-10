@@ -116,7 +116,7 @@ class AddEditNoteState extends State<AddEditNote> {
               child: saveButton,
             ),
             SizedBox(
-              height: 5.0,
+              height: 25.0,
             ),
           ],
         ),
