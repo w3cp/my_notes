@@ -4,6 +4,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:my_notes/utils/uidata.dart';
 import 'package:my_notes/model/note.dart';
 import 'package:my_notes/db/db.dart';
+import 'package:my_notes/utils/showSnackbar.dart';
 
 class NoteDetails extends StatefulWidget {
   @override
@@ -17,13 +18,6 @@ class _NoteDetailsState extends State<NoteDetails> {
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  void _showSnackBar(String text) {
-    _scaffoldKey.currentState.removeCurrentSnackBar();
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
-      content: Text(text),
-    ));
-  }
-
   void _updateNote() {
     final Future<Database> dbFuture = _db.database;
 
@@ -34,7 +28,7 @@ class _NoteDetailsState extends State<NoteDetails> {
         setState(() {
           this.note = note;
           this._edited = true;
-          _showSnackBar(UIData.snackbarNoteUpdateSuccess);
+          ShowSnackbar.snackBar(_scaffoldKey, UIData.snackbarNoteUpdateSuccess);
         });
         print('note updated');
         print('Inside _updateNote: ${note.title}');

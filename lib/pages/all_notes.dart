@@ -4,6 +4,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:my_notes/utils/uidata.dart';
 import 'package:my_notes/model/note.dart';
 import 'package:my_notes/db/db.dart';
+import 'package:my_notes/utils/showSnackbar.dart';
 
 class AllNotes extends StatefulWidget {
   @override
@@ -16,13 +17,6 @@ class AllNotesState extends State<AllNotes> {
   int _length = 0;
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  void _showSnackBar(String text) {
-    _scaffoldKey.currentState.removeCurrentSnackBar();
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
-      content: Text(text),
-    ));
-  }
 
   void _updateNoteList() {
     final Future<Database> dbFuture = _db.database;
@@ -52,7 +46,7 @@ class AllNotesState extends State<AllNotes> {
     );
     if (result != null) {
       _updateNoteList();
-      _showSnackBar(result);
+      ShowSnackbar.snackBar(_scaffoldKey, result);
     }
   }
 
@@ -64,7 +58,7 @@ class AllNotesState extends State<AllNotes> {
     );
     if (result != null) {
       _updateNoteList();
-      _showSnackBar(result);
+      ShowSnackbar.snackBar(_scaffoldKey, result);
     }
   }
 
