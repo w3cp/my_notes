@@ -11,6 +11,10 @@ class UIData {
   static const String titleRouteAddNewNote = "Add New Note";
   static const String titleRouteEditNote = "Edit Note";
 
+  //drawer
+  static const String drawerAllNotes = "All Notes";
+  static const String drawerFavoriteNotes = "Favorite Notes";
+
   //actions
   static const String actionDelete = "delete";
   static const String actionEdit = "edit";

@@ -14,7 +14,9 @@ class AllNotes extends StatefulWidget {
 class AllNotesState extends State<AllNotes> {
   DBProvider _db = DBProvider.db;
   List<Note> notes;
-  int _length = 0;
+  List<Note> filteredNotes;
+
+  String _appBarTitle = UIData.appName;
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -27,9 +29,36 @@ class AllNotesState extends State<AllNotes> {
       notesFuture.then((notes) {
         setState(() {
           this.notes = notes;
-          this._length = notes.length;
+          this.filteredNotes = notes;
+          _appBarTitle = UIData.appName;
+          //print('notes $notes');
+          //print('filteredNotes $filteredNotes');
         });
       });
+    });
+  }
+
+  void _updateNoteListByAll() {
+    setState(() {
+      filteredNotes = notes;
+      _appBarTitle = UIData.appName;
+      Navigator.pop(context);
+    });
+  }
+
+  void _updateNoteListByFavorite() {
+    List<Note> tempNotes = List<Note>();
+
+    for (int i = 0; i < filteredNotes.length; i++) {
+      if (filteredNotes[i].favorite == true) {
+        tempNotes.add(filteredNotes[i]);
+      }
+    }
+
+    setState(() {
+      filteredNotes = tempNotes;
+      _appBarTitle = UIData.drawerFavoriteNotes;
+      Navigator.pop(context);
     });
   }
 
@@ -39,7 +68,7 @@ class AllNotesState extends State<AllNotes> {
       UIData.routeAddEditNote,
       arguments: Note(
         // to create a new note pass the latest note id + 1
-        id: (_length == 0) ? 0 : notes[_length - 1].id + 1,
+        id: (notes.length == 0) ? 0 : notes[notes.length - 1].id + 1,
         title: '',
         body: '',
       ),
@@ -105,10 +134,10 @@ class AllNotesState extends State<AllNotes> {
 
   Widget _buildList() {
     return ListView.builder(
-      itemCount: _length * 2,
+      itemCount: filteredNotes.length * 2,
       itemBuilder: (context, index) {
-        final i = _length - (index ~/ 2) - 1; // last to first
-        final note = notes[i];
+        final i = filteredNotes.length - (index ~/ 2) - 1; // last to first
+        final note = filteredNotes[i];
         return (index % 2 == 1)
             ? Divider(height: 0.0)
             : Dismissible(
@@ -153,18 +182,44 @@ class AllNotesState extends State<AllNotes> {
     );
   }
 
+  Widget drawer() => Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              child: Text(UIData.appName),
+              decoration: BoxDecoration(
+                color: Theme.of(context).backgroundColor,
+              ),
+            ),
+            ListTile(
+              title: Text(UIData.drawerAllNotes),
+              leading: Icon(Icons.list),
+              onTap: _updateNoteListByAll,
+            ),
+            ListTile(
+              title: Text(UIData.drawerFavoriteNotes),
+              leading: Icon(Icons.favorite),
+              onTap: _updateNoteListByFavorite,
+            ),
+          ],
+        ),
+      );
+
   @override
   Widget build(BuildContext context) {
     if (notes == null) {
       notes = List<Note>();
+      filteredNotes = List<Note>();
       _updateNoteList();
     }
 
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text(UIData.appName),
+        title: Text(_appBarTitle),
       ),
+      drawer: drawer(),
       body: Container(
         child: _buildList(),
       ),
