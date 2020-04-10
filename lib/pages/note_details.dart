@@ -68,52 +68,73 @@ class _NoteDetailsState extends State<NoteDetails> {
     //print('lastModified: $lastModified');
     //print('formated date: $formatedDate');
 
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(
-        title: Text(UIData.titleRouteNoteDetails),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.delete),
-            onPressed: () {
-              Navigator.pop(context, UIData.actionDelete);
-            },
-            tooltip: UIData.tooltipDeleteNote,
+    final appBar = AppBar(
+      title: Text(UIData.titleRouteNoteDetails),
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.delete),
+          onPressed: () {
+            Navigator.pop(context, UIData.actionDelete);
+          },
+          tooltip: UIData.tooltipDeleteNote,
+        ),
+      ],
+    );
+
+    final favoriteIconButton = IconButton(
+      icon:
+          Icon(note.favorite == true ? Icons.favorite : Icons.favorite_border),
+      color: note.favorite == true
+          ? Theme.of(context).accentColor
+          : Theme.of(context).primaryColorLight,
+      onPressed: () {
+        note.favorite = !note.favorite;
+        _db.updateNote(note);
+        setState(() {});
+      },
+    );
+
+    final noteView = Container(
+      child: ListView(
+        padding: const EdgeInsets.all(16.0),
+        children: <Widget>[
+          ListTile(
+            contentPadding: const EdgeInsets.all(0.0),
+            title: Text(
+              note.title,
+              style: Theme.of(context).textTheme.headline,
+            ),
+            trailing: favoriteIconButton,
+          ),
+          Text(
+            '${UIData.lastModified}: $formatedDate',
+            style: Theme.of(context).textTheme.caption,
+          ),
+          SizedBox(height: 24.0),
+          Text(
+            note.body,
+            style: TextStyle(
+              fontSize: 16.0,
+            ),
           ),
         ],
       ),
-      body: Container(
-        child: ListView(
-          padding: const EdgeInsets.all(16.0),
-          children: <Widget>[
-            ListTile(
-              contentPadding: const EdgeInsets.all(0.0),
-              title: Text(
-                note.title,
-                style: Theme.of(context).textTheme.headline,
-              ),
-            ),
-            Text(
-              '${UIData.lastModified}: $formatedDate',
-              style: Theme.of(context).textTheme.caption,
-            ),
-            SizedBox(height: 24.0),
-            Text(
-              note.body,
-              style: TextStyle(
-                fontSize: 16.0,
-              ),
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _editNote(context, note);
-        },
-        child: Icon(Icons.edit, size: 30.0),
-        tooltip: UIData.tooltipEditNote,
-      ),
+    );
+
+    final fabEdit = FloatingActionButton(
+      onPressed: () {
+        //print('Favorite in fab: ${note.favorite}');
+        _editNote(context, note);
+      },
+      child: Icon(Icons.edit, size: 30.0),
+      tooltip: UIData.tooltipEditNote,
+    );
+
+    return Scaffold(
+      key: _scaffoldKey,
+      appBar: appBar,
+      body: noteView,
+      floatingActionButton: fabEdit,
     );
   }
 }

@@ -62,6 +62,10 @@ class UIData {
   static const String snackbarNoteCreateSuccess = "Note successfully created";
   static const String snackbarNoteUpdateSuccess = "Note successfully updated";
   static const String snackbarNoteDeleteSuccess = "Note deleted";
+  static const String snackbarNoteAddToFavorite =
+      "Note successfully added to favorite";
+  static const String snackbarNoteRemoveFromFavorite =
+      "Note successfully removed from favorite";
 
   //tooltip string
   static const String tooltipAddNewNote = "Add New Note";

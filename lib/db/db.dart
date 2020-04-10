@@ -88,20 +88,20 @@ class DBProvider {
         DBData.columnNoteTitle,
         DBData.columnNoteBody,
         DBData.columnNoteCreatedAt,
+        DBData.columnNoteFavorite,
       ],
     );
 
     // Convert the List<Map<String, dynamic> into a List<Note>.
     return List.generate(
       maps.length,
-      (i) {
-        return Note.fromMap(maps[i]);
-      },
+      (i) =>  Note.fromMap(maps[i]),
     );
   }
 
   Future<Note> getNote(int id) async {
     final db = await database;
+    
     List<Map> results = await db.query(
       DBData.tableNote,
       columns: [
@@ -109,6 +109,7 @@ class DBProvider {
         DBData.columnNoteTitle,
         DBData.columnNoteBody,
         DBData.columnNoteCreatedAt,
+        DBData.columnNoteFavorite,
       ],
       where: '${DBData.columnNoteId} = ?',
       whereArgs: [id],

@@ -31,6 +31,7 @@ class AddEditNoteState extends State<AddEditNote> {
     final Note args = ModalRoute.of(context).settings.arguments;
     _titleController.text = args.title;
     _bodyController.text = args.body;
+    note.favorite = args.favorite;
 
     final titleFormField = TextFormField(
       validator: (value) {
@@ -71,7 +72,15 @@ class AddEditNoteState extends State<AddEditNote> {
         note.body = _bodyController.text;
         note.createdAt = DateTime.now().toString();
         //print('Created date: ${note.createdAt}');
-        _db.createNote(note);
+        
+        if (args.title == '') {
+          note.favorite = false;
+          _db.createNote(note);
+        } else {
+          //print('Favorite in update: ${note.favorite}');
+          _db.updateNote(note);
+        }
+
         Navigator.pop(
             context,
             (args.title == '')
