@@ -46,6 +46,8 @@ class DBProvider {
   Future<int> createNote(Note note) async {
     final db = await database;
 
+    //print('Inside createNote: ${note.createdAt}');
+
     var result = await db.insert(
       DBData.tableNote,
       note.toMap(),
@@ -85,6 +87,7 @@ class DBProvider {
         DBData.columnNoteId,
         DBData.columnNoteTitle,
         DBData.columnNoteBody,
+        DBData.columnNoteCreatedAt,
       ],
     );
 
@@ -92,11 +95,7 @@ class DBProvider {
     return List.generate(
       maps.length,
       (i) {
-        return Note(
-          id: maps[i][DBData.columnNoteId],
-          title: maps[i][DBData.columnNoteTitle],
-          body: maps[i][DBData.columnNoteBody],
-        );
+        return Note.fromMap(maps[i]);
       },
     );
   }
@@ -109,6 +108,7 @@ class DBProvider {
         DBData.columnNoteId,
         DBData.columnNoteTitle,
         DBData.columnNoteBody,
+        DBData.columnNoteCreatedAt,
       ],
       where: '${DBData.columnNoteId} = ?',
       whereArgs: [id],

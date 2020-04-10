@@ -69,6 +69,8 @@ class AddEditNoteState extends State<AddEditNote> {
         note.id = args.id;
         note.title = _titleController.text;
         note.body = _bodyController.text;
+        note.createdAt = DateTime.now().toString();
+        //print('Created date: ${note.createdAt}');
         _db.createNote(note);
         Navigator.pop(
             context,

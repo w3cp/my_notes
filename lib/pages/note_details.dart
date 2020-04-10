@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:intl/intl.dart';
 
 import 'package:my_notes/utils/uidata.dart';
 import 'package:my_notes/model/note.dart';
@@ -16,6 +17,11 @@ class _NoteDetailsState extends State<NoteDetails> {
   Note note = Note();
   bool _edited = false;
 
+  DateTime lastModified;
+  //DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
+  DateFormat dateFormatter = DateFormat.yMMMMEEEEd().add_jm();
+  String formatedDate;
+
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   void _updateNote() {
@@ -30,8 +36,9 @@ class _NoteDetailsState extends State<NoteDetails> {
           this._edited = true;
           ShowSnackbar.snackBar(_scaffoldKey, UIData.snackbarNoteUpdateSuccess);
         });
-        print('note updated');
-        print('Inside _updateNote: ${note.title}');
+        //print('note updated');
+        //print('Inside _updateNote: ${note.title}');
+        //print('Inside _updateNote Date: ${note.createdAt}');
       });
     });
   }
@@ -43,7 +50,7 @@ class _NoteDetailsState extends State<NoteDetails> {
       arguments: currentNote,
     );
     if (result != null) {
-      print(result);
+      //print(result);
       _updateNote();
     }
   }
@@ -52,9 +59,14 @@ class _NoteDetailsState extends State<NoteDetails> {
   Widget build(BuildContext context) {
     if (!_edited) {
       note = ModalRoute.of(context).settings.arguments;
-      print('get note from route');
+      //print('get note from route');
     }
-    print('Inside build: ${note.title}');
+    //print('Inside build: ${note.title}');
+    //print('Date: ${note.createdAt}');
+    lastModified = DateTime.parse(note.createdAt);
+    formatedDate = dateFormatter.format(lastModified);
+    //print('lastModified: $lastModified');
+    //print('formated date: $formatedDate');
 
     return Scaffold(
       key: _scaffoldKey,
@@ -74,9 +86,16 @@ class _NoteDetailsState extends State<NoteDetails> {
         child: ListView(
           padding: const EdgeInsets.all(16.0),
           children: <Widget>[
+            ListTile(
+              contentPadding: const EdgeInsets.all(0.0),
+              title: Text(
+                note.title,
+                style: Theme.of(context).textTheme.headline,
+              ),
+            ),
             Text(
-              note.title,
-              style: Theme.of(context).textTheme.headline,
+              '${UIData.lastModified}: $formatedDate',
+              style: Theme.of(context).textTheme.caption,
             ),
             SizedBox(height: 24.0),
             Text(

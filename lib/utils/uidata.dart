@@ -71,4 +71,7 @@ class UIData {
 
   //lebel string
   static const String lebelUndo = "Undo";
+
+  //other strings
+  static const String lastModified = "Last modified";
 }
