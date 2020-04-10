@@ -128,11 +128,21 @@ class AllNotesState extends State<AllNotes> {
                       const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
                   title: Text('${note.title}'),
                   subtitle: Text(_getSubtitle(note.body, 36)),
-                  trailing: IconButton(
-                    icon: Icon(Icons.edit),
-                    onPressed: () {
-                      _editNote(context, note);
-                    },
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Icon(
+                        note.favorite == true ? Icons.favorite : null,
+                        color: Theme.of(context).accentColor,
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.edit),
+                        onPressed: () {
+                          _editNote(context, note);
+                        },
+                      ),
+                    ],
                   ),
                   onTap: () {
                     _viewNote(context, note);
