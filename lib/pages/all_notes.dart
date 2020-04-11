@@ -20,7 +20,85 @@ class AllNotesState extends State<AllNotes> {
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  void _updateNoteList() {
+  final TextEditingController _filterController = TextEditingController();
+  int _previousSearchTextLength = 0;
+  Icon _searchIcon = Icon(Icons.search);
+  Widget _appBarWidget = Text(UIData.appName);
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    _filterController.dispose();
+    super.dispose();
+  }
+
+  void _searchNote(String searchText) {
+    //print('Inside _searchNote searchText: $searchText');
+    if (searchText.isEmpty) {
+      setState(() {
+        _previousSearchTextLength = 0;
+        filteredNotes = notes;
+      });
+    } else {
+      //print(_previousSearchTextLength);
+      //print(searchText.length);
+      if (_previousSearchTextLength > searchText.length) {
+        filteredNotes = notes;
+      }
+      _previousSearchTextLength = searchText.length;
+
+      setState(() {
+        List<Note> tempNotes = List<Note>();
+
+        for (int i = 0; i < filteredNotes.length; i++) {
+          String noteContent = filteredNotes[i].title + filteredNotes[i].body;
+          if (noteContent.toLowerCase().contains(searchText.toLowerCase())) {
+            tempNotes.add(filteredNotes[i]);
+          }
+        }
+
+        //print('Notes before search: $filteredNotes');
+        filteredNotes = tempNotes;
+        //print('Notes after search: $filteredNotes');
+      });
+    }
+  }
+
+  void _searchPressed() {
+    setState(() {
+      if (_searchIcon.icon == Icons.search) {
+        _searchIcon = Icon(Icons.close);
+        _appBarWidget = TextField(
+          controller: _filterController,
+          onChanged: _searchNote,
+          autofocus: true,
+          decoration: InputDecoration(
+            prefixIcon: Icon(Icons.search),
+            hintText: UIData.formHintSearchNote,
+          ),
+        );
+      } else {
+        _searchIcon = Icon(Icons.search);
+        _appBarTitle = UIData.appName;
+        _appBarWidget = Text(_appBarTitle);
+        filteredNotes = notes;
+        _previousSearchTextLength = 0;
+        _filterController.clear();
+      }
+    });
+  }
+
+  Widget appBar() => AppBar(
+        title: _appBarWidget,
+        actions: <Widget>[
+          IconButton(
+            icon: _searchIcon,
+            onPressed: _searchPressed,
+          ),
+        ],
+      );
+
+  void _updateNoteListFromDatabase() {
     final Future<Database> dbFuture = _db.database;
 
     dbFuture.then((database) {
@@ -42,6 +120,7 @@ class AllNotesState extends State<AllNotes> {
     setState(() {
       filteredNotes = notes;
       _appBarTitle = UIData.appName;
+      _appBarWidget = Text(_appBarTitle);
       Navigator.pop(context);
     });
   }
@@ -58,6 +137,7 @@ class AllNotesState extends State<AllNotes> {
     setState(() {
       filteredNotes = tempNotes;
       _appBarTitle = UIData.drawerFavoriteNotes;
+      _appBarWidget = Text(_appBarTitle);
       Navigator.pop(context);
     });
   }
@@ -74,7 +154,7 @@ class AllNotesState extends State<AllNotes> {
       ),
     );
     if (result != null) {
-      _updateNoteList();
+      _updateNoteListFromDatabase();
       ShowSnackbar.snackBar(_scaffoldKey, result);
     }
   }
@@ -86,14 +166,14 @@ class AllNotesState extends State<AllNotes> {
       arguments: currentNote,
     );
     if (result != null) {
-      _updateNoteList();
+      _updateNoteListFromDatabase();
       ShowSnackbar.snackBar(_scaffoldKey, result);
     }
   }
 
   _deleteNote(BuildContext context, Note note) {
     _db.deleteNote(note.id);
-    _updateNoteList();
+    _updateNoteListFromDatabase();
 
     Scaffold.of(context).removeCurrentSnackBar();
     Scaffold.of(context).showSnackBar(SnackBar(
@@ -102,7 +182,7 @@ class AllNotesState extends State<AllNotes> {
         label: UIData.lebelUndo,
         onPressed: () {
           _db.createNote(note);
-          _updateNoteList();
+          _updateNoteListFromDatabase();
         },
       ),
     ));
@@ -115,7 +195,7 @@ class AllNotesState extends State<AllNotes> {
       arguments: note,
     );
     if (action == null) {
-      _updateNoteList();
+      _updateNoteListFromDatabase();
     } else {
       if (action == UIData.actionDelete) {
         _deleteNote(context, note);
@@ -211,14 +291,12 @@ class AllNotesState extends State<AllNotes> {
     if (notes == null) {
       notes = List<Note>();
       filteredNotes = List<Note>();
-      _updateNoteList();
+      _updateNoteListFromDatabase();
     }
 
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(
-        title: Text(_appBarTitle),
-      ),
+      appBar: appBar(),
       drawer: drawer(),
       body: Container(
         child: _buildList(),

@@ -57,6 +57,7 @@ class UIData {
   static const String formHintTitle = "Write your note title";
   static const String formLebelBody = "Note body";
   static const String formHintBody = "Write your note here";
+  static const String formHintSearchNote = "Search Note...";
 
   //raised button
   static const String raisedButtonSave = "Save";
