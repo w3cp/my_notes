@@ -22,11 +22,13 @@ void main() => runApp(
             subhead: UIData.quickFontTheme,
             body2: UIData.quickFontTheme,
             body1: UIData.quickFontTheme,
-            caption: UIData.quickFontTheme,
+            caption: TextStyle().copyWith(
+              fontFamily: UIData.quickFont,
+              color: Colors.grey,
+            ),
             button: UIData.quickFontTheme,
             subtitle: UIData.quickFontTheme,
             overline: UIData.quickFontTheme,
-
           ),
         ),
         initialRoute: UIData.initialRoute,

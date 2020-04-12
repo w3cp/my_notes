@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:intl/intl.dart';
 
 import 'package:my_notes/utils/uidata.dart';
 import 'package:my_notes/model/note.dart';
 import 'package:my_notes/db/db.dart';
 import 'package:my_notes/utils/showSnackbar.dart';
+import 'package:my_notes/utils/formatted_time.dart';
 
 class NoteDetails extends StatefulWidget {
   @override
@@ -17,10 +17,7 @@ class _NoteDetailsState extends State<NoteDetails> {
   Note note = Note();
   bool _edited = false;
 
-  DateTime lastModified;
-  //DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
-  DateFormat dateFormatter = DateFormat.yMMMMEEEEd().add_jm();
-  String formatedDate;
+  FormattedTime formattedTime;
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -62,11 +59,7 @@ class _NoteDetailsState extends State<NoteDetails> {
       //print('get note from route');
     }
     //print('Inside build: ${note.title}');
-    //print('Date: ${note.createdAt}');
-    lastModified = DateTime.parse(note.createdAt);
-    formatedDate = dateFormatter.format(lastModified);
-    //print('lastModified: $lastModified');
-    //print('formated date: $formatedDate');
+    formattedTime = FormattedTime(time: note.createdAt);
 
     final appBar = AppBar(
       title: Text(UIData.titleRouteNoteDetails),
@@ -110,7 +103,7 @@ class _NoteDetailsState extends State<NoteDetails> {
             trailing: favoriteIconButton,
           ),
           Text(
-            '${UIData.lastModified}: $formatedDate',
+            '${UIData.lastModified}: ${formattedTime.getFormattedTime()}',
             style: Theme.of(context).textTheme.caption,
           ),
           SizedBox(height: 24.0),

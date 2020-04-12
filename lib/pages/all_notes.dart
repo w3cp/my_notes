@@ -5,6 +5,7 @@ import 'package:my_notes/utils/uidata.dart';
 import 'package:my_notes/model/note.dart';
 import 'package:my_notes/db/db.dart';
 import 'package:my_notes/utils/showSnackbar.dart';
+import 'package:my_notes/utils/formatted_time.dart';
 
 class AllNotes extends StatefulWidget {
   @override
@@ -15,6 +16,8 @@ class AllNotesState extends State<AllNotes> {
   DBProvider _db = DBProvider.db;
   List<Note> notes;
   List<Note> filteredNotes;
+
+  FormattedTime formattedTime;
 
   String _appBarTitle = UIData.appName;
 
@@ -264,23 +267,35 @@ class AllNotesState extends State<AllNotes> {
         ),
       );
 
-  Widget noteCard(BuildContext context, Note note) => Expanded(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(note.title),
-            SizedBox(
-              height: 10.0,
+  Widget noteCard(BuildContext context, Note note) {
+    formattedTime = FormattedTime(time: note.createdAt);
+    return Expanded(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          RichText(
+            maxLines: 1,
+            text: TextSpan(
+              children: [
+                TextSpan(text: '${UIData.lastModified}: '),
+                TextSpan(
+                  text: formattedTime.getFormattedTime(),
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ],
             ),
-            Text(_getSubtitle(note.body, 50)),
-            SizedBox(
-              height: 20.0,
-            ),
-            actionRow(context, note),
-          ],
-        ),
-      );
+          ),
+          SizedBox(height: 10),
+          Text(note.title),
+          SizedBox(height: 10.0),
+          Text(_getSubtitle(note.body, 50)),
+          SizedBox(height: 20.0),
+          actionRow(context, note),
+        ],
+      ),
+    );
+  }
 
   Widget _buildList() {
     return ListView.builder(
