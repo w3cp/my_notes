@@ -265,26 +265,32 @@ class AllNotesState extends State<AllNotes> {
   }
 
   Widget drawer() => Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              child: Text(UIData.appName),
-              decoration: BoxDecoration(
-                color: Theme.of(context).backgroundColor,
+        child: Container(
+          color: Theme.of(context).backgroundColor,
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              DrawerHeader(
+                child: Text(
+                  UIData.appName,
+                  style: TextStyle(fontSize: 25.0),
+                ),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                ),
               ),
-            ),
-            ListTile(
-              title: Text(UIData.drawerAllNotes),
-              leading: Icon(Icons.list),
-              onTap: _updateNoteListByAll,
-            ),
-            ListTile(
-              title: Text(UIData.drawerFavoriteNotes),
-              leading: Icon(Icons.favorite),
-              onTap: _updateNoteListByFavorite,
-            ),
-          ],
+              ListTile(
+                title: Text(UIData.drawerAllNotes),
+                leading: Icon(Icons.list),
+                onTap: _updateNoteListByAll,
+              ),
+              ListTile(
+                title: Text(UIData.drawerFavoriteNotes),
+                leading: Icon(Icons.favorite),
+                onTap: _updateNoteListByFavorite,
+              ),
+            ],
+          ),
         ),
       );
 

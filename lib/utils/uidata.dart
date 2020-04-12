@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class UIData {
   //routes
   static const String initialRoute = "/";
@@ -87,4 +89,8 @@ class UIData {
 
   //other strings
   static const String lastModified = "Last modified";
+
+  //theme
+  static final TextStyle quickFontTheme = TextStyle().copyWith(fontFamily: UIData.quickFont);
+  static final Color backgroundColor = Colors.grey.shade900;
 }
