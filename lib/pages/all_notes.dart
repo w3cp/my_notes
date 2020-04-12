@@ -213,7 +213,7 @@ class AllNotesState extends State<AllNotes> {
     if (str.length <= endIndex) {
       return str;
     }
-    return str.substring(0, endIndex) + '...';
+    return str.substring(0, endIndex) + '  . . .';
   }
 
   Widget actionRow(BuildContext context, Note note) => Padding(
@@ -289,7 +289,7 @@ class AllNotesState extends State<AllNotes> {
           SizedBox(height: 10),
           Text(note.title),
           SizedBox(height: 10.0),
-          Text(_getSubtitle(note.body, 50)),
+          Text(_getSubtitle(note.body, UIData.noteSubTitleLength)),
           SizedBox(height: 20.0),
           actionRow(context, note),
         ],

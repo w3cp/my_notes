@@ -91,8 +91,9 @@ class UIData {
   //other strings
   static const String lastModified = "Last modified";
 
-  //size
+  //size and values 
   static const double actionRowIconSize = 20.0;
+  static const int noteSubTitleLength = 100;
 
   //theme
   static final TextStyle quickFontTheme = TextStyle().copyWith(fontFamily: UIData.quickFont);
