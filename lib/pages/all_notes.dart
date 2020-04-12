@@ -215,51 +215,51 @@ class AllNotesState extends State<AllNotes> {
 
   Widget _buildList() {
     return ListView.builder(
-      itemCount: filteredNotes.length * 2,
+      itemCount: filteredNotes.length,
       itemBuilder: (context, index) {
-        final i = filteredNotes.length - (index ~/ 2) - 1; // last to first
+        final i = filteredNotes.length - index - 1; // last to first
         final note = filteredNotes[i];
-        return (index % 2 == 1)
-            ? Divider(height: 0.0)
-            : Dismissible(
-                key: Key(note.id.toString()),
-                onDismissed: (direction) {
-                  _deleteNote(context, note);
-                },
-                background: Container(
-                  color: Colors.red,
-                  child: ListTile(
-                    leading: Icon(Icons.delete),
-                    trailing: Icon(Icons.delete),
-                  ),
+        return Dismissible(
+          key: Key(note.id.toString()),
+          onDismissed: (direction) {
+            _deleteNote(context, note);
+          },
+          background: Container(
+            color: Colors.red,
+            child: ListTile(
+              leading: Icon(Icons.delete),
+              trailing: Icon(Icons.delete),
+            ),
+          ),
+          child: ListTile(
+            contentPadding: const EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 12.0),
+            title: Text('${note.title}'),
+            subtitle: Padding(
+              padding: EdgeInsets.only(top: 8.0),
+              child: Text(_getSubtitle(note.body, 36)),
+            ),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Icon(
+                  note.favorite == true ? Icons.favorite : null,
+                  color: Theme.of(context).accentColor,
                 ),
-                child: ListTile(
-                  contentPadding:
-                      const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
-                  title: Text('${note.title}'),
-                  subtitle: Text(_getSubtitle(note.body, 36)),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Icon(
-                        note.favorite == true ? Icons.favorite : null,
-                        color: Theme.of(context).accentColor,
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.edit),
-                        tooltip: UIData.tooltipEditNote,
-                        onPressed: () {
-                          _editNote(context, note);
-                        },
-                      ),
-                    ],
-                  ),
-                  onTap: () {
-                    _viewNote(context, note);
+                IconButton(
+                  icon: Icon(Icons.edit),
+                  tooltip: UIData.tooltipEditNote,
+                  onPressed: () {
+                    _editNote(context, note);
                   },
                 ),
-              );
+              ],
+            ),
+            onTap: () {
+              _viewNote(context, note);
+            },
+          ),
+        );
       },
     );
   }
