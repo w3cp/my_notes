@@ -46,6 +46,7 @@ class AddEditNoteState extends State<AddEditNote> {
       ),
       controller: _titleController,
       maxLines: 1,
+      maxLength: 50,
       autofocus: true,
     );
 
