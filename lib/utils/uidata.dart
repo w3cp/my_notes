@@ -83,12 +83,16 @@ class UIData {
   static const String tooltipSearchNote = "Search Note";
   static const String tooltipAddToFavorite = "Add to favorite";
   static const String tooltipRemoveFromFavorite = "Remove from favorite";
+  static const String tooltipShareThisNote = "Share this note";
 
   //lebel string
   static const String lebelUndo = "Undo";
 
   //other strings
   static const String lastModified = "Last modified";
+
+  //size
+  static const double actionRowIconSize = 20.0;
 
   //theme
   static final TextStyle quickFontTheme = TextStyle().copyWith(fontFamily: UIData.quickFont);

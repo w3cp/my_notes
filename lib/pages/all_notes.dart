@@ -213,6 +213,75 @@ class AllNotesState extends State<AllNotes> {
     return str.substring(0, endIndex) + '...';
   }
 
+  Widget actionRow(BuildContext context, Note note) => Padding(
+        padding: const EdgeInsets.only(right: 16.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            IconButton(
+              icon: Icon(Icons.share),
+              iconSize: UIData.actionRowIconSize,
+              color: Colors.grey,
+              tooltip: UIData.tooltipShareThisNote,
+              onPressed: () {},
+            ),
+            IconButton(
+              icon: Icon(Icons.delete),
+              iconSize: UIData.actionRowIconSize,
+              color: Colors.grey,
+              tooltip: UIData.tooltipDeleteNote,
+              onPressed: () {
+                _deleteNote(context, note);
+              },
+            ),
+            IconButton(
+              icon: Icon(note.favorite == true
+                  ? Icons.favorite
+                  : Icons.favorite_border),
+              color: note.favorite == true
+                  ? Theme.of(context).accentColor
+                  : Colors.grey,
+              tooltip: note.favorite == true
+                  ? UIData.tooltipRemoveFromFavorite
+                  : UIData.tooltipAddToFavorite,
+              iconSize: UIData.actionRowIconSize,
+              onPressed: () {
+                note.favorite = !note.favorite;
+                _db.updateNote(note);
+                _updateNoteListFromDatabase();
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.edit),
+              iconSize: UIData.actionRowIconSize,
+              color: Colors.grey,
+              tooltip: UIData.tooltipEditNote,
+              onPressed: () {
+                _editNote(context, note);
+              },
+            )
+          ],
+        ),
+      );
+
+  Widget noteCard(BuildContext context, Note note) => Expanded(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(note.title),
+            SizedBox(
+              height: 10.0,
+            ),
+            Text(_getSubtitle(note.body, 50)),
+            SizedBox(
+              height: 20.0,
+            ),
+            actionRow(context, note),
+          ],
+        ),
+      );
+
   Widget _buildList() {
     return ListView.builder(
       itemCount: filteredNotes.length,
@@ -231,33 +300,24 @@ class AllNotesState extends State<AllNotes> {
               trailing: Icon(Icons.delete),
             ),
           ),
-          child: ListTile(
-            contentPadding: const EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 12.0),
-            title: Text('${note.title}'),
-            subtitle: Padding(
-              padding: EdgeInsets.only(top: 8.0),
-              child: Text(_getSubtitle(note.body, 36)),
-            ),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Icon(
-                  note.favorite == true ? Icons.favorite : null,
-                  color: Theme.of(context).accentColor,
-                ),
-                IconButton(
-                  icon: Icon(Icons.edit),
-                  tooltip: UIData.tooltipEditNote,
-                  onPressed: () {
-                    _editNote(context, note);
-                  },
-                ),
-              ],
-            ),
+          child: InkWell(
+            splashColor: Theme.of(context).accentColor,
             onTap: () {
               _viewNote(context, note);
             },
+            child: Card(
+              color: Colors.grey.shade900,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    noteCard(context, note),
+                  ],
+                ),
+              ),
+            ),
           ),
         );
       },
