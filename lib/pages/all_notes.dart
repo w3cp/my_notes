@@ -93,6 +93,7 @@ class AllNotesState extends State<AllNotes> {
         actions: <Widget>[
           IconButton(
             icon: _searchIcon,
+            tooltip: UIData.tooltipSearchNote,
             onPressed: _searchPressed,
           ),
         ],
@@ -247,6 +248,7 @@ class AllNotesState extends State<AllNotes> {
                       ),
                       IconButton(
                         icon: Icon(Icons.edit),
+                        tooltip: UIData.tooltipEditNote,
                         onPressed: () {
                           _editNote(context, note);
                         },

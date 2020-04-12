@@ -72,7 +72,7 @@ class AddEditNoteState extends State<AddEditNote> {
         note.body = _bodyController.text;
         note.createdAt = DateTime.now().toString();
         //print('Created date: ${note.createdAt}');
-        
+
         if (args.title == '') {
           note.favorite = false;
           _db.createNote(note);
@@ -140,7 +140,9 @@ class AddEditNoteState extends State<AddEditNote> {
         IconButton(
           icon: Icon(Icons.done),
           onPressed: saveNote,
-          tooltip: UIData.tooltipSaveNote,
+          tooltip: args.title == ''
+              ? UIData.tooltipSaveNote
+              : UIData.tooltipUpdateNote,
         )
       ],
     );

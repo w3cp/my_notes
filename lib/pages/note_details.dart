@@ -87,6 +87,9 @@ class _NoteDetailsState extends State<NoteDetails> {
       color: note.favorite == true
           ? Theme.of(context).accentColor
           : Theme.of(context).primaryColorLight,
+      tooltip: note.favorite == true
+          ? UIData.tooltipRemoveFromFavorite
+          : UIData.tooltipAddToFavorite,
       onPressed: () {
         note.favorite = !note.favorite;
         _db.updateNote(note);

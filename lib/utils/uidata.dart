@@ -77,6 +77,10 @@ class UIData {
   static const String tooltipDeleteNote = "Delete Note";
   static const String tooltipEditNote = "Edit Note";
   static const String tooltipSaveNote = "Save Note";
+  static const String tooltipUpdateNote = "Update Note";
+  static const String tooltipSearchNote = "Search Note";
+  static const String tooltipAddToFavorite = "Add to favorite";
+  static const String tooltipRemoveFromFavorite = "Remove from favorite";
 
   //lebel string
   static const String lebelUndo = "Undo";
