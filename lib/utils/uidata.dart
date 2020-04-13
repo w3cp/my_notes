@@ -69,6 +69,7 @@ class UIData {
   static const String snackbarNoteCreateSuccess = "Note successfully created";
   static const String snackbarNoteUpdateSuccess = "Note successfully updated";
   static const String snackbarNoteDeleteSuccess = "Note deleted";
+  static const String snackbarNoteCopySuccess = "Note copied";
   static const String snackbarNoteAddToFavorite =
       "Note successfully added to favorite";
   static const String snackbarNoteRemoveFromFavorite =
@@ -84,6 +85,7 @@ class UIData {
   static const String tooltipAddToFavorite = "Add to favorite";
   static const String tooltipRemoveFromFavorite = "Remove from favorite";
   static const String tooltipShareThisNote = "Share this note";
+  static const String tooltipCopyNote = "Copy note";
 
   //lebel string
   static const String lebelUndo = "Undo";

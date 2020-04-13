@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'package:my_notes/utils/uidata.dart';
@@ -227,6 +228,17 @@ class AllNotesState extends State<AllNotes> {
               color: Colors.grey,
               tooltip: UIData.tooltipShareThisNote,
               onPressed: () {},
+            ),
+            IconButton(
+              icon: Icon(Icons.content_copy),
+              iconSize: UIData.actionRowIconSize,
+              color: Colors.grey,
+              tooltip: UIData.tooltipCopyNote,
+              onPressed: () {
+                Clipboard.setData(ClipboardData(text: note.toString()));
+                ShowSnackbar.snackBar(
+                    _scaffoldKey, UIData.snackbarNoteCopySuccess);
+              },
             ),
             IconButton(
               icon: Icon(Icons.delete),

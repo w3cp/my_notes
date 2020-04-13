@@ -30,4 +30,9 @@ class Note {
         DBData.columnNoteCreatedAt: createdAt,
         DBData.columnNoteFavorite: favorite == true ? 1 : 0,
       };
+
+  @override
+  String toString() => 'Note title: $title \n\n'
+      'Last modified: $createdAt \n\n'
+      'Note body: $body \n';
 }
