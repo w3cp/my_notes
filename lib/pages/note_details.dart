@@ -139,6 +139,7 @@ class _NoteDetailsState extends State<NoteDetails> {
             note.body,
             style: TextStyle(
               fontSize: 16.0,
+              height: 1.3,
             ),
           ),
         ],
