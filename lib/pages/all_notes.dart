@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:share/share.dart';
 
 import 'package:my_notes/utils/uidata.dart';
 import 'package:my_notes/model/note.dart';
@@ -227,7 +228,9 @@ class AllNotesState extends State<AllNotes> {
               iconSize: UIData.actionRowIconSize,
               color: Colors.grey,
               tooltip: UIData.tooltipShareThisNote,
-              onPressed: () {},
+              onPressed: () {
+                Share.share(note.toString(), subject: note.title);
+              },
             ),
             IconButton(
               icon: Icon(Icons.content_copy),
