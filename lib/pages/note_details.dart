@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:flutter/services.dart'; // clipboard
+import 'package:share/share.dart';
 
 import 'package:my_notes/utils/uidata.dart';
 import 'package:my_notes/model/note.dart';
@@ -74,21 +76,47 @@ class _NoteDetailsState extends State<NoteDetails> {
       ],
     );
 
-    final favoriteIconButton = IconButton(
-      icon:
-          Icon(note.favorite == true ? Icons.favorite : Icons.favorite_border),
-      color: note.favorite == true
-          ? Theme.of(context).accentColor
-          : Theme.of(context).primaryColorLight,
-      tooltip: note.favorite == true
-          ? UIData.tooltipRemoveFromFavorite
-          : UIData.tooltipAddToFavorite,
-      onPressed: () {
-        note.favorite = !note.favorite;
-        _db.updateNote(note);
-        setState(() {});
-      },
+    final actionButton = Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: <Widget>[
+        IconButton(
+          icon: Icon(Icons.share),
+          iconSize: UIData.actionRowIconSize,
+          color: Colors.grey,
+          tooltip: UIData.tooltipShareThisNote,
+          onPressed: () {
+            Share.share(note.toString(), subject: note.title);
+          },
+        ),
+        IconButton(
+          icon: Icon(Icons.content_copy),
+          iconSize: UIData.actionRowIconSize,
+          color: Colors.grey,
+          tooltip: UIData.tooltipCopyNote,
+          onPressed: () {
+            Clipboard.setData(ClipboardData(text: note.toString()));
+            ShowSnackbar.snackBar(_scaffoldKey, UIData.snackbarNoteCopySuccess);
+          },
+        ),
+        IconButton(
+          icon: Icon(
+              note.favorite == true ? Icons.favorite : Icons.favorite_border),
+          color: note.favorite == true
+              ? Theme.of(context).accentColor
+              : Theme.of(context).primaryColorLight,
+          tooltip: note.favorite == true
+              ? UIData.tooltipRemoveFromFavorite
+              : UIData.tooltipAddToFavorite,
+          onPressed: () {
+            note.favorite = !note.favorite;
+            _db.updateNote(note);
+            setState(() {});
+          },
+        ),
+      ],
     );
+
+    //final favoriteIconButton = null;
 
     final noteView = Container(
       child: ListView(
@@ -100,7 +128,7 @@ class _NoteDetailsState extends State<NoteDetails> {
               note.title,
               style: Theme.of(context).textTheme.headline,
             ),
-            trailing: favoriteIconButton,
+            subtitle: actionButton,
           ),
           Text(
             '${UIData.lastModified}: ${formattedTime.getFormattedTime()}',
