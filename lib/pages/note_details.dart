@@ -126,7 +126,7 @@ class _NoteDetailsState extends State<NoteDetails> {
             contentPadding: const EdgeInsets.all(0.0),
             title: Text(
               note.title,
-              style: Theme.of(context).textTheme.headline5,
+              style: Theme.of(context).textTheme.headline,
             ),
             subtitle: actionButton,
           ),
