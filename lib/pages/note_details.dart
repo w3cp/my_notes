@@ -135,7 +135,7 @@ class _NoteDetailsState extends State<NoteDetails> {
             style: Theme.of(context).textTheme.caption,
           ),
           SizedBox(height: 24.0),
-          Text(
+          SelectableText(
             note.body,
             style: TextStyle(
               fontSize: 16.0,
