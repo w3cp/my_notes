@@ -356,13 +356,13 @@ class AllNotesState extends State<AllNotes> {
               trailing: Icon(Icons.delete),
             ),
           ),
-          child: InkWell(
-            splashColor: Theme.of(context).accentColor,
-            onTap: () {
-              _viewNote(context, note);
-            },
-            child: Card(
-              color: Colors.grey.shade900,
+          child: Card(
+            color: Colors.grey.shade900,
+            child: InkWell(
+              splashColor: Theme.of(context).accentColor,
+              onTap: () {
+                _viewNote(context, note);
+              },
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Row(
