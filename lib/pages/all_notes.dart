@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/rendering.dart';
+
 import 'package:sqflite/sqflite.dart';
 import 'package:share/share.dart';
 
@@ -8,6 +10,7 @@ import 'package:my_notes/model/note.dart';
 import 'package:my_notes/db/db.dart';
 import 'package:my_notes/utils/showSnackbar.dart';
 import 'package:my_notes/utils/formatted_time.dart';
+import 'package:my_notes/logic/bloc/fab_bloc.dart';
 
 class AllNotes extends StatefulWidget {
   @override
@@ -30,10 +33,29 @@ class AllNotesState extends State<AllNotes> {
   Icon _searchIcon = Icon(Icons.search);
   Widget _appBarWidget = Text(UIData.appName);
 
+  ScrollController scrollController;
+  FabBloc fabBloc;
+
+  @override
+  void initState() {
+    super.initState();
+
+    scrollController = ScrollController();
+    fabBloc = FabBloc();
+
+    scrollController.addListener(() {
+      if (scrollController.position.userScrollDirection ==
+          ScrollDirection.reverse) fabBloc.fabSink.add(false);
+      if (scrollController.position.userScrollDirection ==
+          ScrollDirection.forward) fabBloc.fabSink.add(true);
+    });
+  }
+
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
     _filterController.dispose();
+    fabBloc?.dispose();
     super.dispose();
   }
 
@@ -317,6 +339,7 @@ class AllNotesState extends State<AllNotes> {
 
   Widget _buildList() {
     return ListView.builder(
+      controller: scrollController,
       itemCount: filteredNotes.length,
       itemBuilder: (context, index) {
         final i = filteredNotes.length - index - 1; // last to first
@@ -402,12 +425,19 @@ class AllNotesState extends State<AllNotes> {
       body: Container(
         child: _buildList(),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _createNote(context);
-        },
-        child: Icon(Icons.add, size: 30.0),
-        tooltip: UIData.tooltipAddNewNote,
+      floatingActionButton: StreamBuilder<bool>(
+        stream: fabBloc.fabVisible,
+        initialData: true,
+        builder: (context, snapshot) => Visibility(
+          visible: snapshot.data,
+          child: FloatingActionButton(
+            onPressed: () {
+              _createNote(context);
+            },
+            child: Icon(Icons.add, size: 30.0),
+            tooltip: UIData.tooltipAddNewNote,
+          ),
+        ),
       ),
     );
   }
