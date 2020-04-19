@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:flutter/rendering.dart';
+
 import 'package:flutter/services.dart'; // clipboard
 import 'package:share/share.dart';
 
@@ -8,6 +10,7 @@ import 'package:my_notes/model/note.dart';
 import 'package:my_notes/db/db.dart';
 import 'package:my_notes/utils/showSnackbar.dart';
 import 'package:my_notes/utils/formatted_time.dart';
+import 'package:my_notes/logic/bloc/fab_bloc.dart';
 
 class NoteDetails extends StatefulWidget {
   @override
@@ -22,6 +25,31 @@ class _NoteDetailsState extends State<NoteDetails> {
   FormattedTime formattedTime;
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  ScrollController scrollController;
+  FabBloc fabBloc;
+
+  @override
+  void initState() {
+    super.initState();
+
+    scrollController = ScrollController();
+    fabBloc = FabBloc();
+
+    scrollController.addListener(() {
+      if (scrollController.position.userScrollDirection ==
+          ScrollDirection.reverse) fabBloc.fabSink.add(false);
+      if (scrollController.position.userScrollDirection ==
+          ScrollDirection.forward) fabBloc.fabSink.add(true);
+    });
+  }
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    fabBloc?.dispose();
+    super.dispose();
+  }
 
   void _updateNote() {
     final Future<Database> dbFuture = _db.database;
@@ -120,6 +148,7 @@ class _NoteDetailsState extends State<NoteDetails> {
 
     final noteView = Container(
       child: ListView(
+        controller: scrollController,
         padding: const EdgeInsets.all(16.0),
         children: <Widget>[
           ListTile(
@@ -146,20 +175,25 @@ class _NoteDetailsState extends State<NoteDetails> {
       ),
     );
 
-    final fabEdit = FloatingActionButton(
-      onPressed: () {
-        //print('Favorite in fab: ${note.favorite}');
-        _editNote(context, note);
-      },
-      child: Icon(Icons.edit, size: 30.0),
-      tooltip: UIData.tooltipEditNote,
-    );
-
     return Scaffold(
       key: _scaffoldKey,
       appBar: appBar,
       body: noteView,
-      floatingActionButton: fabEdit,
+      floatingActionButton: StreamBuilder<bool>(
+        stream: fabBloc.fabVisible,
+        initialData: true,
+        builder: (context, snapshot) => Visibility(
+          visible: snapshot.data,
+          child: FloatingActionButton(
+            onPressed: () {
+              //print('Favorite in fab: ${note.favorite}');
+              _editNote(context, note);
+            },
+            child: Icon(Icons.edit, size: 30.0),
+            tooltip: UIData.tooltipEditNote,
+          ),
+        ),
+      ),
     );
   }
 }
