@@ -326,7 +326,7 @@ class AllNotesState extends State<AllNotes> {
           SizedBox(height: 10),
           Text(
             note.title,
-            style: Theme.of(context).textTheme.subhead,
+            style: Theme.of(context).textTheme.subtitle1,
           ),
           SizedBox(height: 10.0),
           Text(_getSubtitle(note.body, UIData.noteSubTitleLength)),
