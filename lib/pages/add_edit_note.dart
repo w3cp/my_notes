@@ -43,6 +43,7 @@ class AddEditNoteState extends State<AddEditNote> {
       decoration: InputDecoration(
         labelText: UIData.formLebelTitle,
         hintText: UIData.formHintTitle,
+        border: const OutlineInputBorder(),
       ),
       controller: _titleController,
       maxLines: 1,
@@ -60,6 +61,7 @@ class AddEditNoteState extends State<AddEditNote> {
       decoration: InputDecoration(
         labelText: UIData.formLebelBody,
         hintText: UIData.formHintBody,
+        border: const OutlineInputBorder(),
       ),
       keyboardType: TextInputType.multiline,
       maxLines: null,
